@@ -18,9 +18,11 @@ export const WorkerRequests: React.FC<{ onAccept: (id: string) => void }> = ({ o
   const [isUpdating, setIsUpdating] = useState(false);
 
   const handleReject = async (id: string) => {
+    const reason = window.prompt("Reason for rejecting this booking:");
+    if (reason === null) return;
     try {
       setIsUpdating(true);
-      await updateBookingStatus(id, 'cancelled');
+      await updateBookingStatus(id, 'cancelled', reason);
     } catch (error) {
       alert("Unable to reject booking. Please try again.");
     } finally {

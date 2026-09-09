@@ -9,12 +9,13 @@ import { ChevronRight, Briefcase, DollarSign, Heart, UserCheck, LayoutDashboard 
 import { WorkerEarnings } from './WorkerEarnings';
 import { WorkerWelfare } from './WorkerWelfare';
 import { WorkerProfileEditor } from './WorkerProfileEditor';
+import { WorkerJobs } from './WorkerJobs';
 
 export const WorkerDashboard: React.FC = () => {
-  const { bookings, updateBookingStatus, activeBookingId, setActiveBookingId } = useDemo();
+  const { bookings, updateBookingStatus, activeBookingId, setActiveBookingId, activeWorkerId } = useDemo();
   const [activeTab, setActiveTab] = useState<'dashboard' | 'jobs' | 'earnings' | 'welfare' | 'profile'>('dashboard');
 
-  const activeJob = bookings.find(b => b.id === activeBookingId && b.status !== 'completed' && b.status !== 'cancelled');
+  const activeJob = bookings.find(b => b.id === activeBookingId && b.workerId === activeWorkerId && b.status !== 'completed' && b.status !== 'cancelled');
 
   
   const [isUpdating, setIsUpdating] = useState(false);
@@ -159,10 +160,10 @@ export const WorkerDashboard: React.FC = () => {
                 </div>
               </div>
               <InteractiveMap
-                customerLocationName="Banjara Hills, Hyderabad"
-                workerName="You"
-                workerPhoto="https://images.unsplash.com/photo-1540569014015-19a7be504e3a?w=400&auto=format&fit=crop&q=80"
-                workerCategory="Worker"
+                customerLocationName={activeJob.customerAddress || "Location Details"}
+                workerName={activeJob.workerName || "You"}
+                workerPhoto={activeJob.workerPhoto || "https://images.unsplash.com/photo-1540569014015-19a7be504e3a?w=400&auto=format&fit=crop&q=80"}
+                workerCategory={activeJob.serviceCategory || "Worker"}
                 distanceKm={2.1}
                 etaMinutes={activeJob.status === 'on_the_way' ? 8 : activeJob.status === 'arrived' ? 0 : 5}
                 statusText={`Status: ${activeJob.status.replace('_', ' ').toUpperCase()}`}
@@ -183,9 +184,7 @@ export const WorkerDashboard: React.FC = () => {
       )}
 
       {activeTab === 'jobs' && (
-        <div className="bg-white p-6 rounded-3xl border border-slate-200 text-center">
-          <p className="text-sm font-bold text-slate-500 py-10">Job History View (Coming Soon)</p>
-        </div>
+        <WorkerJobs />
       )}
       {activeTab === 'profile' && <WorkerProfileEditor />}
       {activeTab === 'earnings' && <WorkerEarnings />}

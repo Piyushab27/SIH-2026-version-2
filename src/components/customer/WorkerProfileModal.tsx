@@ -61,7 +61,7 @@ export const WorkerProfileModal: React.FC<WorkerProfileModalProps> = ({
               <p className="text-xs text-slate-200 mt-1 font-medium">{worker.bio}</p>
               
               <div className="mt-2">
-                <VerifiedBadge cooperativeName={worker.cooperativeName} size="md" />
+                <VerifiedBadge cooperativeName={worker.cooperativeName} size="md" status={worker.verificationStatus} />
               </div>
             </div>
           </div>

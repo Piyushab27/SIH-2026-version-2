@@ -47,7 +47,7 @@ export const WorkerCard: React.FC<WorkerCardProps> = ({
                 {worker.categoryLabel}
               </p>
               <div className="mt-1">
-                <VerifiedBadge cooperativeName={worker.cooperativeName} size="sm" />
+                <VerifiedBadge cooperativeName={worker.cooperativeName} size="sm" status={worker.verificationStatus} />
               </div>
             </div>
           </div>

@@ -282,14 +282,15 @@ export const acceptBooking = async (bookingId: string) => {
   return updateBookingStatus(bookingId, 'accepted');
 };
 
-export const updateBookingStatus = async (bookingId: string, status: string) => {
+export const updateBookingStatus = async (bookingId: string, status: string, notes?: string) => {
   const { error } = await supabase.from('bookings').update({ status }).eq('id', bookingId);
   if (error) throw error;
   
   // Create history entry
   const { error: histErr } = await supabase.from('booking_status_history').insert([{
     booking_id: bookingId,
-    status: status
+    status: status,
+    notes: notes || null
   }]);
   if (histErr) throw histErr;
 };

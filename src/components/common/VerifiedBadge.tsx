@@ -4,14 +4,32 @@ import { ShieldCheck, Users } from 'lucide-react';
 interface VerifiedBadgeProps {
   cooperativeName?: string;
   size?: 'sm' | 'md' | 'lg';
+  status?: string;
 }
 
 export const VerifiedBadge: React.FC<VerifiedBadgeProps> = ({
-  cooperativeName = 'Hyderabad Labour Cooperative Society',
+  cooperativeName = 'Cooperative Society',
   size = 'md',
+  status = 'verified',
 }) => {
   const isSm = size === 'sm';
   const isLg = size === 'lg';
+
+  if (status === 'pending') {
+    return (
+      <span className={`inline-flex items-center gap-1.5 rounded-md bg-amber-100 text-amber-800 font-extrabold uppercase border border-amber-200 ${isSm ? 'px-2 py-0.5 text-[10px]' : isLg ? 'px-3 py-1.5 text-sm' : 'px-3 py-1 text-xs'}`}>
+        Verification Pending
+      </span>
+    );
+  }
+
+  if (status !== 'verified') {
+    return (
+      <span className={`inline-flex items-center gap-1.5 rounded-md bg-rose-100 text-rose-800 font-extrabold uppercase border border-rose-200 ${isSm ? 'px-2 py-0.5 text-[10px]' : isLg ? 'px-3 py-1.5 text-sm' : 'px-3 py-1 text-xs'}`}>
+        Verification {status || 'Unknown'}
+      </span>
+    );
+  }
 
   return (
     <div

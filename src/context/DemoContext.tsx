@@ -73,7 +73,7 @@ interface DemoContextType {
     isEmergency?: boolean;
     estimatedPrice?: number;
   }) => Promise<Booking>;
-  updateBookingStatus: (bookingId: string, status: BookingStatus) => Promise<void>;
+  updateBookingStatus: (bookingId: string, status: BookingStatus, notes?: string) => Promise<void>;
   submitRating: (bookingId: string, rating: number, comment: string, tags: string[]) => void;
   updateWorkerProfile: (workerId: string, updates: Partial<Worker>) => Promise<void>;
   toggleAvailability: (workerId: string) => Promise<void>;
@@ -269,7 +269,7 @@ export const DemoProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return newBooking;
   };
 
-  const updateBookingStatus = async (bookingId: string, status: BookingStatus) => {
+  const updateBookingStatus = async (bookingId: string, status: BookingStatus, notes?: string) => {
     // Optimistic UI
     setBookings(prev => prev.map(b => {
       if (b.id === bookingId) {
@@ -288,7 +288,7 @@ export const DemoProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     try {
       const { updateBookingStatus: updateSupabaseStatus } = await import('../services/supabaseService');
-      await updateSupabaseStatus(bookingId, status);
+      await updateSupabaseStatus(bookingId, status, notes);
     } catch (err) {
       console.error("Failed to update status in Supabase", err);
       throw err; // So UI can catch it
