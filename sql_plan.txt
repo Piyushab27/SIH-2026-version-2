@@ -1,0 +1,103 @@
+CREATE TABLE cooperatives (
+    id TEXT PRIMARY KEY,
+    name TEXT NOT NULL,
+    federation TEXT
+);
+
+CREATE TABLE workers (
+    id TEXT PRIMARY KEY,
+    cooperative_id TEXT REFERENCES cooperatives(id),
+    name TEXT NOT NULL,
+    photo TEXT,
+    category TEXT,
+    category_label TEXT,
+    rating NUMERIC,
+    jobs_completed INTEGER,
+    experience_years INTEGER,
+    distance_km NUMERIC,
+    is_available BOOLEAN,
+    base_price NUMERIC,
+    verification_status TEXT,
+    verification_badge TEXT,
+    bio TEXT,
+    lat NUMERIC,
+    lng NUMERIC,
+    current_workload TEXT,
+    welfare_status TEXT,
+    welfare_fund_balance NUMERIC,
+    insurance_coverage TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now())
+);
+
+CREATE TABLE worker_skills (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    worker_id TEXT REFERENCES workers(id) ON DELETE CASCADE,
+    skill TEXT NOT NULL
+);
+
+CREATE TABLE worker_languages (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    worker_id TEXT REFERENCES workers(id) ON DELETE CASCADE,
+    language TEXT NOT NULL
+);
+
+CREATE TABLE worker_certifications (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    worker_id TEXT REFERENCES workers(id) ON DELETE CASCADE,
+    certification TEXT NOT NULL
+);
+
+CREATE TABLE worker_reviews (
+    id TEXT PRIMARY KEY,
+    worker_id TEXT REFERENCES workers(id) ON DELETE CASCADE,
+    customer_name TEXT,
+    rating NUMERIC,
+    date TEXT,
+    comment TEXT
+);
+
+CREATE TABLE customers (
+    id TEXT PRIMARY KEY,
+    name TEXT NOT NULL,
+    phone TEXT,
+    address TEXT,
+    lat NUMERIC,
+    lng NUMERIC,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now())
+);
+
+CREATE TABLE bookings (
+    id TEXT PRIMARY KEY,
+    customer_id TEXT REFERENCES customers(id),
+    worker_id TEXT REFERENCES workers(id),
+    service_category TEXT,
+    service_title TEXT,
+    scheduled_date TEXT,
+    scheduled_time TEXT,
+    problem_description TEXT,
+    photo_url TEXT,
+    is_emergency BOOLEAN DEFAULT FALSE,
+    status TEXT,
+    estimated_price NUMERIC,
+    final_price NUMERIC,
+    wage_total_paid NUMERIC,
+    wage_worker_earnings NUMERIC,
+    wage_cooperative_contribution NUMERIC,
+    wage_welfare_contribution NUMERIC,
+    created_at TIMESTAMP WITH TIME ZONE,
+    completed_at TIMESTAMP WITH TIME ZONE,
+    rating NUMERIC,
+    review_comment TEXT
+);
+
+CREATE TABLE complaints (
+    id TEXT PRIMARY KEY,
+    booking_id TEXT REFERENCES bookings(id),
+    customer_id TEXT REFERENCES customers(id),
+    category TEXT,
+    description TEXT,
+    amount NUMERIC,
+    details TEXT,
+    status TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now())
+);
